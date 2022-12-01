@@ -1,9 +1,13 @@
 import React from 'react'
 import styles from '../styles/Home.module.css'
+import Head from 'next/head'
 
 const Home = () => {
   return (
     <div className={styles.homepage}>
+      <Head>
+        <title>NextJs App</title>
+      </Head>
       <h1 className={styles.homepagetitle}>Welcome to Mentor and Student Assigning</h1>
       <div className={styles.list}>
         <div>
