@@ -22,10 +22,8 @@ export const getStaticProps = async () => {
     try {
         let { data } = await axios.get(`${api}`)
         return {
-            props: {
-                data,
-                revalidate: 10
-            }
+            props: { data },
+            revalidate: 10
         }
     } catch (error) {
         res.statusCode = 404;
