@@ -19,11 +19,17 @@ export const api =
 
 
 export const getStaticProps = async () => {
-    let { data } = await axios.get(`${api}`)
-    return {
-        props: {
-            data
+    try {
+        let { data } = await axios.get(`${api}`)
+        return {
+            props: {
+                data,
+                revalidate: 10
+            }
         }
+    } catch (error) {
+        res.statusCode = 404;
+        return { props: {} };
     }
 }
 
