@@ -11,13 +11,19 @@ import axios from "axios";
 import styles from '../../styles/Home.module.css'
 
 export const getStaticProps = async () => {
-    let student = await axios.get(`${api}`)
-    let mentor = await axios.get(`${mentorapi}`)
-    return {
-        props: {
-            student: student.data,
-            mentor: mentor.data
+    try {
+        let student = await axios.get(`${api}`)
+        let mentor = await axios.get(`${mentorapi}`)
+        return {
+            props: {
+                student: student.data,
+                mentor: mentor.data
+            },
+            revalidate: 5
         }
+    } catch (error) {
+        res.statusCode = 404;
+        return { props: {} };
     }
 }
 

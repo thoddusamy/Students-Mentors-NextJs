@@ -17,11 +17,17 @@ export const mentorapi =
     "https://mentor-student-assigning.herokuapp.com/mentors";
 
 export const getStaticProps = async () => {
-    let { data } = await axios.get(`${mentorapi}`)
-    return {
-        props: {
-            data
+    try {
+        let { data } = await axios.get(`${mentorapi}`)
+        return {
+            props: {
+                data
+            },
+            revalidate: 5
         }
+    } catch (error) {
+        res.statusCode = 404;
+        return { props: {} };
     }
 }
 
