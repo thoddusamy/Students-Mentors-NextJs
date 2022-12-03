@@ -15,7 +15,7 @@ import axios from 'axios'
 import { useEffect, useState } from "react";
 
 export const mentorapi =
-    "http://localhost:3000/api/mentors";
+    "https://students-mentors-nextjs.vercel.app/api/mentors";
 
 export default function Mentors() {
 

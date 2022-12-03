@@ -15,7 +15,7 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 
 export const api =
-    "http://localhost:3000/api/students";
+    "https://students-mentors-nextjs.vercel.app/api/students";
 
 
 export default function Students({ data }) {
