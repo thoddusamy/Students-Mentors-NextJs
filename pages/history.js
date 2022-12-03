@@ -12,29 +12,40 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
 import styles from '../styles/Home.module.css'
+import { useEffect, useState } from "react";
 
-export const getStaticProps = async () => {
-    try {
-        let student = await axios.get(`${api}`)
-        let mentor = await axios.get(`${mentorapi}`)
-        return {
-            props: {
-                students: student.data,
-                mentors: mentor.data,
-            },
-            revalidate: 5
+export default function History() {
+
+    const [students, setStudents] = useState([]);
+    const [mentors, setMentors] = useState([]);
+
+    const getMentors = async () => {
+        try {
+            let { data } = await axios.get(`${mentorapi}`)
+            setMentors(data)
+        } catch (error) {
+            console.log(error);
         }
-    } catch (error) {
-        res.statusCode = 404;
-        return { props: {} };
-    }
-}
+    };
 
-export default function History({ students, mentors }) {
+    const getStudents = async () => {
+        try {
+            let { data } = await axios.get(`${api}`)
+            setStudents(data)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getMentors()
+        getStudents()
+    }, []);
 
     const deleteStudent = async (id) => {
         try {
             await axios.delete(`${api}/${id}`)
+            getStudents()
         } catch (error) {
             console.log(error);
         }

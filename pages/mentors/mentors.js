@@ -12,32 +12,34 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import Paper from "@mui/material/Paper";
 import axios from 'axios'
+import { useEffect, useState } from "react";
 
 export const mentorapi =
-    "https://mentor-student-assigning.herokuapp.com/mentors";
+    "http://localhost:3000/api/mentors";
 
-export const getStaticProps = async () => {
-    try {
-        let { data } = await axios.get(`${mentorapi}`)
-        return {
-            props: {
-                data
-            },
-            revalidate: 5
-        }
-    } catch (error) {
-        res.statusCode = 404;
-        return { props: {} };
-    }
-}
-
-export default function Mentors({ data }) {
+export default function Mentors() {
 
     const router = useRouter();
+
+    const [mentors, setMentors] = useState([]);
+
+    const getMentors = async () => {
+        try {
+            let { data } = await axios.get(`${mentorapi}`)
+            setMentors(data)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getMentors()
+    }, []);
 
     const deleteMentor = async (id) => {
         try {
             await axios.delete(`${mentorapi}/${id}`)
+            getMentors()
         } catch (error) {
             console.log(error);
         }
@@ -73,7 +75,7 @@ export default function Mentors({ data }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map(({ name, email, mentorId, _id }, index) => (
+                        {mentors.map(({ name, email, mentorId, _id }, index) => (
                             <Mentor
                                 key={index}
                                 name={name}

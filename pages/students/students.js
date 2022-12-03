@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Tooltip from "@mui/material/Tooltip";
@@ -15,29 +15,32 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 
 export const api =
-    "https://mentor-student-assigning.herokuapp.com/students";
+    "http://localhost:3000/api/students";
 
-
-export const getStaticProps = async () => {
-    try {
-        let { data } = await axios.get(`${api}`)
-        return {
-            props: { data },
-            revalidate: 5 // 5 seconds
-        }
-    } catch (error) {
-        res.statusCode = 404;
-        return { props: {} };
-    }
-}
 
 export default function Students({ data }) {
 
     const router = useRouter()
 
+    const [students, setStudents] = useState([]);
+
+    const getStudents = async () => {
+        try {
+            let { data } = await axios.get(`${api}`)
+            setStudents(data)
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getStudents()
+    }, []);
+
     const deleteStudent = async (id) => {
         try {
             await axios.delete(`${api}/${id}`)
+            getStudents()
         } catch (error) {
             console.log(error);
         }
@@ -70,7 +73,7 @@ export default function Students({ data }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data.map(({ name, surname, email, mentorId, _id }, index) => (
+                        {students.map(({ name, surname, email, mentorId, _id }, index) => (
                             <Student
                                 key={index}
                                 name={name}

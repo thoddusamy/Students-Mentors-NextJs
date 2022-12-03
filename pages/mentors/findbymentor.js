@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -16,26 +16,34 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import styles from '../../styles/Home.module.css'
 
-export const getStaticProps = async () => {
-    try {
-        let student = await axios.get(`${api}`)
-        let mentor = await axios.get(`${mentorapi}`)
-        return {
-            props: {
-                students: student.data,
-                mentors: mentor.data
-            },
-            revalidate: 5
-        }
-    } catch (error) {
-        res.statusCode = 404;
-        return { props: {} };
-    }
-}
+export default function FindByMentor({ color }) {
 
-export default function FindByMentor({ color, students, mentors }) {
-
+    const [mentors, setMentors] = useState([]);
+    const [students, setStudents] = useState([]);
     const [filterStudents, setFilterStudents] = useState([]);
+
+    const getMentors = async () => {
+        try {
+            let { data } = await axios.get(`${mentorapi}`)
+            setMentors(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getStudents = async () => {
+        try {
+            let { data } = await axios.get(`${api}`)
+            setStudents(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getStudents();
+        getMentors();
+    }, []);
 
     const [mentorId, setMentorId] = useState("");
     const handleMentorChange = (e) => {

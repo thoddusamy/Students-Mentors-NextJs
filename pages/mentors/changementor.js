@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,26 +10,38 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import styles from '../../styles/Home.module.css'
 
-export const getStaticProps = async () => {
-    try {
-        let student = await axios.get(`${api}`)
-        let mentor = await axios.get(`${mentorapi}`)
-        return {
-            props: {
-                student: student.data,
-                mentor: mentor.data
-            },
-            revalidate: 5
-        }
-    } catch (error) {
-        res.statusCode = 404;
-        return { props: {} };
-    }
-}
-
-export default function ChangeMentor({ student, mentor }) {
+export default function ChangeMentor() {
 
     const router = useRouter();
+
+    const [students, setStudents] = useState([]);
+    const [mentors, setMentors] = useState([]);
+
+    const getStudents = async () => {
+        try {
+            let { data } = await axios.get(`${api}`)
+            setStudents(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getStudents();
+    }, []);
+
+    const getMentors = async () => {
+        try {
+            let { data } = await axios.get(`${mentorapi}`)
+            setMentors(data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    useEffect(() => {
+        getMentors();
+    }, []);
 
     const [mentorId, setMentorId] = useState("");
     const handleMentorChange = (e) => {
@@ -76,7 +88,7 @@ export default function ChangeMentor({ student, mentor }) {
                     label="Select Student"
                     onChange={handleStudentChange}
                 >
-                    {student.map((e, index) => (
+                    {students.map((e, index) => (
                         <MenuItem value={e._id} key={index} style={style}>
                             {" "}
                             {e.name} {e.surname}{" "}
@@ -93,7 +105,7 @@ export default function ChangeMentor({ student, mentor }) {
                     label="Select Mentor"
                     onChange={handleMentorChange}
                 >
-                    {mentor.map((e, index) => (
+                    {mentors.map((e, index) => (
                         <MenuItem value={e.mentorId} key={index} style={style}>
                             {e.name}
                         </MenuItem>
