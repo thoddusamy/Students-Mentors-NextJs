@@ -18,13 +18,13 @@ export const api =
     "https://students-mentors-nextjs.vercel.app/api/students";
 
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     try {
         let response = await fetch(`${api}`)
         let data = await response.json()
         return {
             props: { data },
-            revalidate: 5
+            // revalidate: 5
         }
     } catch (error) {
         console.log(error);
