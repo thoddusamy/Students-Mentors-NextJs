@@ -10,38 +10,32 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import styles from '../../styles/Home.module.css'
 
-export default function ChangeMentor() {
+export const getStaticProps = async () => {
+    try {
+        let studentRes = await fetch(`${api}`)
+        let mentorRes = await fetch(`${mentorapi}`)
+        let studentData = await studentRes.json()
+        let mentorData = await mentorRes.json()
+        return {
+            props: {
+                mentors: mentorData,
+                students: studentData
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            props: {
+                mentors: [],
+                students: []
+            }
+        }
+    }
+}
+
+export default function ChangeMentor({ mentors, students }) {
 
     const router = useRouter();
-
-    const [students, setStudents] = useState([]);
-    const [mentors, setMentors] = useState([]);
-
-    const getStudents = async () => {
-        try {
-            let { data } = await axios.get(`${api}`)
-            setStudents(data)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getStudents();
-    }, []);
-
-    const getMentors = async () => {
-        try {
-            let { data } = await axios.get(`${mentorapi}`)
-            setMentors(data)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getMentors();
-    }, []);
 
     const [mentorId, setMentorId] = useState("");
     const handleMentorChange = (e) => {

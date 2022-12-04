@@ -16,34 +16,32 @@ import Paper from "@mui/material/Paper";
 import axios from "axios";
 import styles from '../../styles/Home.module.css'
 
-export default function FindByMentor({ color }) {
+export const getStaticProps = async () => {
+    try {
+        let studentRes = await fetch(`${api}`)
+        let mentorRes = await fetch(`${mentorapi}`)
+        let studentData = await studentRes.json()
+        let mentorData = await mentorRes.json()
+        return {
+            props: {
+                mentors: mentorData,
+                students: studentData
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            props: {
+                mentors: [],
+                students: []
+            }
+        }
+    }
+}
 
-    const [mentors, setMentors] = useState([]);
-    const [students, setStudents] = useState([]);
+export default function FindByMentor({ color, mentors, students }) {
+
     const [filterStudents, setFilterStudents] = useState([]);
-
-    const getMentors = async () => {
-        try {
-            let { data } = await axios.get(`${mentorapi}`)
-            setMentors(data)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    const getStudents = async () => {
-        try {
-            let { data } = await axios.get(`${api}`)
-            setStudents(data)
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    useEffect(() => {
-        getStudents();
-        getMentors();
-    }, []);
 
     const [mentorId, setMentorId] = useState("");
     const handleMentorChange = (e) => {

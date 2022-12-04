@@ -6,8 +6,12 @@ export default async function handler(req, res) {
     const db = client.db("Student-and-Mentor");
 
     if (method === "GET") {
-        const data = await db.collection("mentors").find().sort({ mentorId: 1 }).toArray()
-        res.status(200).json(data)
+        try {
+            const data = await db.collection("mentors").find().sort({ mentorId: 1 }).toArray()
+            res.status(200).json(data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     if (method === "POST") {

@@ -12,34 +12,33 @@ import Button from "@mui/material/Button";
 import { useRouter } from "next/router";
 import Paper from "@mui/material/Paper";
 import axios from 'axios'
-import { useEffect, useState } from "react";
 
 export const mentorapi =
     "https://students-mentors-nextjs.vercel.app/api/mentors";
 
-export default function Mentors() {
+export const getStaticProps = async () => {
+    try {
+        let response = await fetch(`${mentorapi}`)
+        let data = await response.json()
+        return {
+            props: { data }
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            props: { data: [] }
+        }
+    }
+}
+
+export default function Mentors({ data }) {
 
     const router = useRouter();
-
-    const [mentors, setMentors] = useState([]);
-
-    const getMentors = async () => {
-        try {
-            let { data } = await axios.get(`${mentorapi}`)
-            setMentors(data)
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        getMentors()
-    }, []);
 
     const deleteMentor = async (id) => {
         try {
             await axios.delete(`${mentorapi}/${id}`)
-            getMentors()
+            router.push('/mentors/mentors')
         } catch (error) {
             console.log(error);
         }
@@ -75,7 +74,7 @@ export default function Mentors() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {mentors.map(({ name, email, mentorId, _id }, index) => (
+                        {data.map(({ name, email, mentorId, _id }, index) => (
                             <Mentor
                                 key={index}
                                 name={name}

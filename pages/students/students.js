@@ -18,29 +18,29 @@ export const api =
     "https://students-mentors-nextjs.vercel.app/api/students";
 
 
+export const getStaticProps = async () => {
+    try {
+        let response = await fetch(`${api}`)
+        let data = await response.json()
+        return {
+            props: { data },
+        }
+    } catch (error) {
+        console.log(error);
+        return {
+            props: { data: [] }
+        }
+    }
+}
+
 export default function Students({ data }) {
 
     const router = useRouter()
 
-    const [students, setStudents] = useState([]);
-
-    const getStudents = async () => {
-        try {
-            let { data } = await axios.get(`${api}`)
-            setStudents(data)
-        } catch (error) {
-            console.log(error);
-        }
-    };
-
-    useEffect(() => {
-        getStudents()
-    }, []);
-
     const deleteStudent = async (id) => {
         try {
             await axios.delete(`${api}/${id}`)
-            getStudents()
+            router.push('/students/students')
         } catch (error) {
             console.log(error);
         }
@@ -73,7 +73,7 @@ export default function Students({ data }) {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {students.map(({ name, surname, email, mentorId, _id }, index) => (
+                        {data.map(({ name, surname, email, mentorId, _id }, index) => (
                             <Student
                                 key={index}
                                 name={name}
