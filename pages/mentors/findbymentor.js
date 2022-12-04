@@ -26,7 +26,8 @@ export const getStaticProps = async () => {
             props: {
                 mentors: mentorData,
                 students: studentData
-            }
+            },
+            revalidate: 5
         }
     } catch (error) {
         console.log(error);

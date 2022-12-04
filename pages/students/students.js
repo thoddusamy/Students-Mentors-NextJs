@@ -24,6 +24,7 @@ export const getStaticProps = async () => {
         let data = await response.json()
         return {
             props: { data },
+            revalidate: 5
         }
     } catch (error) {
         console.log(error);

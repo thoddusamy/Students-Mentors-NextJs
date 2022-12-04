@@ -21,7 +21,8 @@ export const getStaticProps = async () => {
         let response = await fetch(`${mentorapi}`)
         let data = await response.json()
         return {
-            props: { data }
+            props: { data },
+            revalidate: 5
         }
     } catch (error) {
         console.log(error);
