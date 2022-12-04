@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import IconButton from "@mui/material/IconButton";
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import Tooltip from "@mui/material/Tooltip";
@@ -24,7 +24,6 @@ export const getServerSideProps = async () => {
         let data = await response.json()
         return {
             props: { data },
-            // revalidate: 5
         }
     } catch (error) {
         console.log(error);

@@ -16,13 +16,12 @@ import axios from 'axios'
 export const mentorapi =
     "https://students-mentors-nextjs.vercel.app/api/mentors";
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     try {
         let response = await fetch(`${mentorapi}`)
         let data = await response.json()
         return {
             props: { data },
-            revalidate: 5
         }
     } catch (error) {
         console.log(error);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import styles from '../../styles/Home.module.css'
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     try {
         let studentRes = await fetch(`${api}`)
         let mentorRes = await fetch(`${mentorapi}`)
@@ -21,7 +21,6 @@ export const getStaticProps = async () => {
                 mentors: mentorData,
                 students: studentData
             },
-            revalidate: 5
         }
     } catch (error) {
         console.log(error);
