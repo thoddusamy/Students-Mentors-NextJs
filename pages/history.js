@@ -14,7 +14,7 @@ import axios from "axios";
 import styles from '../styles/Home.module.css'
 import { useRouter } from "next/router";
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     try {
         let studentRes = await fetch(`${api}`)
         let mentorRes = await fetch(`${mentorapi}`)
@@ -25,7 +25,6 @@ export const getStaticProps = async () => {
                 mentors: mentorData,
                 students: studentData
             },
-            revalidate: 5
         }
     } catch (error) {
         console.log(error);
